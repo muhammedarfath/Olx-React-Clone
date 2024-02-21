@@ -14,11 +14,11 @@ function PopupSignup({ onClose,onFun }) {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async ({ email, password }) => {
+  const onSubmit = async ({ email, password,phone,username }) => {
     if (user) {
       alert("user is already exists")
     } else {
-      await SignUp(email, password);
+      await SignUp(email, password,phone,username);
     }
     onClose();
   };
@@ -31,6 +31,16 @@ function PopupSignup({ onClose,onFun }) {
         </button>
         <h2 className="text-2xl font-semibold mb-6 text-gray-900">SignUp</h2>
         <form action="" className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex flex-col">
+            <label className="mb-2 text-gray-700" htmlFor="email">User Name</label>
+            <input
+              id="username"
+              type="username"
+              placeholder="Enter your username"
+              className="input border border-gray-300 text-black rounded-md px-3 py-2"
+              {...register("username", { required: true })}
+            />
+          </div>
           <div className="flex flex-col">
             <label className="mb-2 text-gray-700" htmlFor="email">Email</label>
             <input
@@ -39,6 +49,16 @@ function PopupSignup({ onClose,onFun }) {
               placeholder="Enter your email"
               className="input border border-gray-300 text-black rounded-md px-3 py-2"
               {...register("email", { required: true })}
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="mb-2 text-gray-700" htmlFor="email">Phone</label>
+            <input
+              id="phone"
+              type="phone"
+              placeholder="Enter your phone"
+              className="input border border-gray-300 text-black rounded-md px-3 py-2"
+              {...register("phone", { required: true })}
             />
           </div>
           <div className="flex flex-col">

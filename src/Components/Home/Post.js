@@ -29,7 +29,7 @@ function Post() {
             <tbody>
               {/* You can add table rows and data here */}
               <tr>
-                <Link to='/attributes'>
+                <Link to='/sell'>
                 <td className="border p-2 flex gap-3 items-center"><IoCarSportOutline />Car </td>
                 </Link>
               </tr>

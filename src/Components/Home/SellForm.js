@@ -1,72 +1,69 @@
-import React, { useState,useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { FaArrowLeft } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import { LuCamera } from "react-icons/lu";
-import { db, storage} from '../../firebase/firebase';
+import app, { storage } from '../../firebase/firebase';
 import useAuth from '../../Hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
-import { ref } from 'firebase/storage';
-
-
-
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { getFirestore, collection, addDoc } from 'firebase/firestore';
 
 function SellForm() {
-    const {user} = useAuth();
-    const navigate = useNavigate();
-    const fileInputRef = useRef(null);
-    const [name,setName] = useState('');
-    const [description,setDescription] = useState('');
-    const [place,setPlace] = useState('');
-    const [price,setPrice] = useState('');
-    const [image,setImage] = useState(null)
-    const date = new Date()
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const fileInputRef = useRef(null);
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [place, setPlace] = useState('');
+  const [price, setPrice] = useState('');
+  const [image, setImage] = useState(null);
+  const date = new Date();
 
-      const handleCameraClick = () => {
-        fileInputRef.current.click();
-      };
+  const handleCameraClick = () => {
+    fileInputRef.current.click();
+  };
 
-      const handleSubmit = (e) =>{
-        e.preventDefault()
-        if (!image) {
-          console.error("No image selected");
-          return;
-        }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!user) {
+      console.error("User not authenticated");
+      return;
+    }
+    if (!image) {
+      console.error("No image selected");
+      return;
+    }
 
-      
-        const storageRef = ref(storage, `/image/${image.name}`);
-        console.log("storage success", storageRef);
-        storageRef
-          .put(image)
-          .then((snapshot) => {
-            return snapshot.ref.getDownloadURL();
-          })
-          .then((url) => {
-            console.log("url success",url)
-              db.collection('products').add({
-              name,
-              description,
-              price,
-              place,
-              url,
-              userId: user.uid,
-              createdAt: date.toDateString()
-            })
-            .then(() => {
-              navigate('/')
-              console.log("Product added successfully");
-            })
-            .catch((error) => {
-              console.error("Error adding product:", error);
-            });
+    const storageRef = ref(storage, `/images/${image.name}`);
+
+    uploadBytesResumable(storageRef, image)
+      .then((snapshot) => {
+        console.log('File uploaded successfully');
+        return getDownloadURL(snapshot.ref);
+      })
+      .then((url) => {
+        console.log(url);
+          addDoc(collection(getFirestore(), 'products'),{
+          name,
+          description,
+          price,
+          place,
+          url,
+          userId: user.uid,
+          createdAt: date.toDateString()
+        })
+          .then(() => {
+            navigate('/')
+            console.log("Product added successfully");
           })
           .catch((error) => {
-            console.error("Error uploading file:", error);
+            console.error("Error adding product:", error);
           });
-      }
-
-
-
-
+      })
+      .catch((error) => {
+        console.error("Error uploading file:", error);
+      });
+  };
 
 
   return (
