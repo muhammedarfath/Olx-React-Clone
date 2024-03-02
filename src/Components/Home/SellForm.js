@@ -54,14 +54,14 @@ function SellForm() {
         })
           .then(() => {
             navigate('/')
-            console.log("Product added successfully");
+            alert("Product added successfully");
           })
           .catch((error) => {
-            console.error("Error adding product:", error);
+            alert("Error adding product:", error);
           });
       })
       .catch((error) => {
-        console.error("Error uploading file:", error);
+        alert("Error uploading file:", error);
       });
   };
 

@@ -6,7 +6,7 @@ import { MdAddHomeWork } from "react-icons/md";
 import { RiMotorbikeFill } from "react-icons/ri";
 import { Link } from 'react-router-dom';
 
-function Post() {
+function Category() {
   return (
     <>
       <div className='w-full p-6 top-0 left-0 z-50 navbar h-18'>
@@ -51,4 +51,4 @@ function Post() {
   );
 }
 
-export default Post;
+export default Category;

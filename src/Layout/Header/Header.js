@@ -18,6 +18,13 @@ function Header({onFun}) {
   const [showPop,setPop]=useState(false)
   const {user,logout} = useAuth();
   const [showLogin, setShowLogin] = useState(true);
+  const [showLogoutDropdown, setShowLogoutDropdown] = useState(false);
+
+  const handleMouseEnter = () => {
+    setShowLogoutDropdown(!showLogoutDropdown);
+  };
+
+
   
   const toggleForm = () => {
     setShowLogin(!showLogin);
@@ -93,9 +100,17 @@ function Header({onFun}) {
                 <div className='w-8 rounded-2xl hover:bg-cyan-100 cursor-pointer'>
                   <MdNotificationsNone className='text-[#002f34] w-7 h-7' />
                 </div>
-                <div className='flex gap-2 cursor-pointer'>
-                <img src="https://res.cloudinary.com/postman/image/upload/t_user_profile_300/v1/user/phcas1iju5llcnec8wgc.jpg" onClick={logout} className='w-6 h-7' alt="" />
-                <FaChevronDown className='text-[#002f34] w-9 h-7' />
+                <div className='flex gap-2 cursor-pointer' onClick={handleMouseEnter}>
+                  <img src="https://res.cloudinary.com/postman/image/upload/t_user_profile_300/v1/user/phcas1iju5llcnec8wgc.jpg"  className='w-6 h-7' alt="" />
+                  <FaChevronDown className='text-[#002f34] w-9 h-7' />
+                  {showLogoutDropdown && (
+                    <div className="absolute mt-9 w-36 right-[75px] bg-white shadow-md rounded-md z-10">
+                      <ul>
+                        <li className="py-1 px-3 hover:bg-gray-200">Profile</li>
+                        <li onClick={logout} className="py-1 px-3 hover:bg-gray-200 cursor-pointer">Logout</li>
+                      </ul>
+                    </div>
+                  )}
                 </div>
               </>
             )}
